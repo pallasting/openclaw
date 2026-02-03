@@ -1,0 +1,3 @@
+environment:
+  - HTTPS_PROXY=socks5://172.17.0.1:40000 # 172.17.0.1 是 Docker 默认的宿主机 IP
+```[[1](https://www.google.com/url?sa=E&q=https%3A%2F%2Fvertexaisearch.cloud.google.com%2Fgrounding-api-redirect%2FAUZIYQHqMN5UdWXre5cdEZeN_IUVKiWUQStkZAXK_Pg8H1fAmDI-mIMhrBOkmZTj_5oipK8SwFJTPMNl2fv29fTMuN_gzYRgIt_WI4AS-8n8cLBc6d9YkLU-p9E5hWPlRyrTWikDWdqpBDM5a1bj97g66Tl2UmrChVO2JG1ichpPG7KXjk0T)][[2](https://www.google.com/url?sa=E&q=https%3A%2F%2Fvertexaisearch.cloud.google.com%2Fgrounding-api-redirect%2FAUZIYQEc12emq3QQMlh4V3to6I05jza8wNXwZBaVevisUAW54w--bzGKIOd0l4jWjmFF__gkmcsNzqX49YTcxWzL131o4vPBNL56vcJS_p7RQQpiHwPmg2GwJXuyDNlgVNdkIVb-wxIrwlRbf8z0io7-1bEbF6nQGROW5IrZ0uRIt8kcscC7fgXraGbmNoLKGCsVWqWTx5SqhwTAPlTsD6lM6Czt4g%3D%3D)]
