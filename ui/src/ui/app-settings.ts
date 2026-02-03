@@ -33,10 +33,12 @@ import {
 import { saveSettings, type UiSettings } from "./storage.ts";
 import { startThemeTransition, type ThemeTransitionContext } from "./theme-transition.ts";
 import { resolveTheme, type ResolvedTheme, type ThemeMode } from "./theme.ts";
+import { setLocale } from "./i18n"; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
 
-type SettingsHost = {
+export type SettingsHost = {
   settings: UiSettings;
-  password?: string;
+password?: string;
+password: string; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
   theme: ThemeMode;
   themeResolved: ResolvedTheme;
   applySessionKey: string;
@@ -66,6 +68,9 @@ export function applySettings(host: SettingsHost, next: UiSettings) {
   if (next.theme !== host.theme) {
     host.theme = next.theme;
     applyResolvedTheme(host, resolveTheme(next.theme));
+  }
+  if (normalized.language) {
+    setLocale(normalized.language);
   }
   host.applySessionKey = host.settings.lastActiveSessionKey;
 }

@@ -34,6 +34,8 @@ import type {
 import type { ChatAttachment, ChatQueueItem, CronFormState } from "./ui-types.ts";
 import type { NostrProfileFormState } from "./views/channels.nostr-profile-form.ts";
 import type { SessionLogEntry } from "./views/usage.ts";
+ConfigUiHints,
+import type { CompactionIndicatorStatus } from "./views/chat"; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
 
 export type AppViewState = {
   settings: UiSettings;
@@ -271,7 +273,7 @@ export type AppViewState = {
   setPassword: (next: string) => void;
   setSessionKey: (next: string) => void;
   setChatMessage: (next: string) => void;
-  handleSendChat: (messageOverride?: string, opts?: { restoreDraft?: boolean }) => Promise<void>;
+handleSendChat: (messageOverride?: string, opts?: { restoreDraft?: boolean }) => Promise<void>;
   handleAbortChat: () => Promise<void>;
   removeQueuedMessage: (id: string) => void;
   handleChatScroll: (event: Event) => void;
@@ -282,4 +284,37 @@ export type AppViewState = {
   handleOpenSidebar: (content: string) => void;
   handleCloseSidebar: () => void;
   handleSplitRatioChange: (ratio: number) => void;
+handleChatSend: () => Promise<void>;
+  handleChatAbort: () => Promise<void>;
+  handleChatSelectQueueItem: (id: string) => void;
+  handleChatDropQueueItem: (id: string) => void;
+  handleChatClearQueue: () => void;
+  handleLogsFilterChange: (next: string) => void;
+  handleLogsLevelFilterToggle: (level: LogLevel) => void;
+  handleLogsAutoFollowToggle: (next: boolean) => void;
+  handleCallDebugMethod: (method: string, params: string) => Promise<void>;
+
+  applySessionKey: string;
+  configSchemaVersion: string;
+  logsCursor: string | null;
+  logsLastFetchAt: number | null;
+  logsLimit: number;
+  logsMaxBytes: number;
+
+  // Missing properties added to fix build
+  chatStreamStartedAt: number | null;
+  refreshSessionsAfterChat: Set<string>;
+  compactionStatus: CompactionIndicatorStatus | null;
+  handleSendChat: (text?: string, opts?: { restoreDraft?: boolean }) => Promise<void>;
+
+  sidebarOpen: boolean;
+  sidebarContent: string | null;
+  sidebarError: string | null;
+  splitRatio: number;
+
+  configSearchQuery: string;
+  configActiveSection: string | null;
+  configActiveSubsection: string | null;
+
+  exportLogs: () => void; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
 };
