@@ -159,7 +159,7 @@ export function iconForTab(tab: Tab): IconName {
 export function titleForTab(tab: Tab) {
   switch (tab) {
     case "agents":
-      return "Agents";
+      return t().ui.tabs.agents;
     case "overview":
       return t().ui.tabs.overview;
     case "channels":
@@ -193,7 +193,7 @@ return t().ui.tabs.sessions; (feat(i18n): localize Control UI to Simplified Chin
 export function subtitleForTab(tab: Tab) {
   switch (tab) {
     case "agents":
-      return "Manage agent workspaces, tools, and identities.";
+      return t().ui.subtitles.agents;
     case "overview":
       return t().ui.subtitles.overview;
     case "channels":
