@@ -34,6 +34,8 @@ export type ChatProps = {
   availableModels: ConfiguredModelOption[];
   selectedModel: string | null;
   onModelChange: (model: string) => void;
+  reasoningLevel: "off" | "on" | "stream";
+  onReasoningLevelChange: (level: "off" | "on" | "stream") => void;
   compactionStatus?: CompactionIndicatorStatus | null;
   messages: unknown[];
   toolMessages: unknown[];
@@ -371,6 +373,18 @@ export function renderChat(props: ChatProps) {
               ${props.availableModels.map(
                 (m) => html`<option value=${m.value} ?selected=${m.value === props.selectedModel}>${m.label}</option>`
               )}
+            </select>
+<select
+              title="Reasoning Level"
+              class="select select--sm"
+              style="max-width: 120px; font-size: 0.85rem;"
+              .value=${props.reasoningLevel}
+              ?disabled=${!props.connected}
+              @change=${(e: Event) => props.onReasoningLevelChange((e.target as HTMLSelectElement).value as any)}
+            >
+              <option value="off" ?selected=${props.reasoningLevel === "off"}>Reasoning: Off</option>
+              <option value="on" ?selected=${props.reasoningLevel === "on"}>Reasoning: On</option>
+              <option value="stream" ?selected=${props.reasoningLevel === "stream"}>Reasoning: Stream</option>
             </select>
           </div>
         ` : nothing}

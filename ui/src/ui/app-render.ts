@@ -1093,6 +1093,8 @@ ${state.tab === "cron"
         availableModels: resolveConfiguredModels(state.configForm),
             selectedModel: state.sessionsResult?.sessions?.find((s) => s.key === state.sessionKey)?.model ?? null,
             onModelChange: (model: string) => state.handleSessionsPatch(state.sessionKey, { model: model || null }),
+            reasoningLevel: state.sessionsResult?.sessions?.find((s) => s.key === state.sessionKey)?.reasoningLevel ?? "off",
+            onReasoningLevelChange: (level: any) => state.handleSessionsPatch(state.sessionKey, { reasoningLevel: level }),
             sessionKey: state.sessionKey,
         onSessionKeyChange: (next) => {
           state.sessionKey = next;
