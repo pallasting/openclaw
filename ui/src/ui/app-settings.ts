@@ -22,6 +22,7 @@ import { loadNodes } from "./controllers/nodes.ts";
 import { loadPresence } from "./controllers/presence.ts";
 import { loadSessions } from "./controllers/sessions.ts";
 import { loadSkills } from "./controllers/skills.ts";
+import { setLocale } from "./i18n.ts";
 import {
   inferBasePathFromPathname,
   normalizeBasePath,
@@ -33,12 +34,10 @@ import {
 import { saveSettings, type UiSettings } from "./storage.ts";
 import { startThemeTransition, type ThemeTransitionContext } from "./theme-transition.ts";
 import { resolveTheme, type ResolvedTheme, type ThemeMode } from "./theme.ts";
-import { setLocale } from "./i18n"; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
 
 export type SettingsHost = {
   settings: UiSettings;
-password?: string;
-password: string; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+  password: string;
   theme: ThemeMode;
   themeResolved: ResolvedTheme;
   applySessionKey: string;

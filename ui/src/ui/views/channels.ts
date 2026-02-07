@@ -15,6 +15,7 @@ import type {
 } from "../types.ts";
 import type { ChannelKey, ChannelsChannelData, ChannelsProps } from "./channels.types.ts";
 import { formatAgo } from "../format.ts";
+import { t } from "../i18n";
 import { renderChannelConfigSection } from "./channels.config.ts";
 import { renderDiscordCard } from "./channels.discord.ts";
 import { renderGoogleChatCard } from "./channels.googlechat.ts";
@@ -25,7 +26,6 @@ import { renderSignalCard } from "./channels.signal.ts";
 import { renderSlackCard } from "./channels.slack.ts";
 import { renderTelegramCard } from "./channels.telegram.ts";
 import { renderWhatsAppCard } from "./channels.whatsapp.ts";
-import { t } from "../i18n"; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
 
 export function renderChannels(props: ChannelsProps) {
   const channels = props.snapshot?.channels as Record<string, unknown> | null;
@@ -54,18 +54,18 @@ export function renderChannels(props: ChannelsProps) {
   return html`
     <section class="grid grid-cols-2">
       ${orderedChannels.map((channel) =>
-    renderChannel(channel.key, props, {
-      whatsapp,
-      telegram,
-      discord,
-      googlechat,
-      slack,
-      signal,
-      imessage,
-      nostr,
-      channelAccounts: props.snapshot?.channelAccounts ?? null,
-    }),
-  )}
+        renderChannel(channel.key, props, {
+          whatsapp,
+          telegram,
+          discord,
+          googlechat,
+          slack,
+          signal,
+          imessage,
+          nostr,
+          channelAccounts: props.snapshot?.channelAccounts ?? null,
+        }),
+      )}
     </section>
 
     <section class="card" style="margin-top: 18px;">
@@ -76,12 +76,13 @@ export function renderChannels(props: ChannelsProps) {
         </div>
         <div class="muted">${props.lastSuccessAt ? formatAgo(props.lastSuccessAt) : "n/a"}</div>
       </div>
-      ${props.lastError
-      ? html`<div class="callout danger" style="margin-top: 12px;">
+      ${
+        props.lastError
+          ? html`<div class="callout danger" style="margin-top: 12px;">
             ${props.lastError}
           </div>`
-      : nothing
-    }
+          : nothing
+      }
       <pre class="code-block" style="margin-top: 12px;">
 ${props.snapshot ? JSON.stringify(props.snapshot, null, 2) : t().ui.views.channels.noSnapshot}
       </pre>
@@ -155,12 +156,12 @@ function renderChannel(key: ChannelKey, props: ChannelsProps, data: ChannelsChan
         props.nostrProfileAccountId === accountId ? props.nostrProfileFormState : null;
       const profileFormCallbacks = showForm
         ? {
-          onFieldChange: props.onNostrProfileFieldChange,
-          onSave: props.onNostrProfileSave,
-          onImport: props.onNostrProfileImport,
-          onCancel: props.onNostrProfileCancel,
-          onToggleAdvanced: props.onNostrProfileToggleAdvanced,
-        }
+            onFieldChange: props.onNostrProfileFieldChange,
+            onSave: props.onNostrProfileSave,
+            onImport: props.onNostrProfileImport,
+            onCancel: props.onNostrProfileCancel,
+            onToggleAdvanced: props.onNostrProfileToggleAdvanced,
+          }
         : null;
       return renderNostrCard({
         props,
@@ -197,13 +198,14 @@ function renderGenericChannelCard(
       <div class="card-sub">${t().ui.views.channels.statusSub}</div>
       ${accountCountLabel}
 
-      ${accounts.length > 0
-      ? html`
+      ${
+        accounts.length > 0
+          ? html`
             <div class="account-card-list">
               ${accounts.map((account) => renderGenericAccount(account))}
             </div>
           `
-      : html`
+          : html`
             <div class="status-list" style="margin-top: 16px;">
               <div>
                 <span class="label">${t().ui.views.channels.configured}</span>
@@ -219,14 +221,15 @@ function renderGenericChannelCard(
               </div>
             </div>
           `
-    }
+      }
 
-      ${lastError
-      ? html`<div class="callout danger" style="margin-top: 12px;">
+      ${
+        lastError
+          ? html`<div class="callout danger" style="margin-top: 12px;">
             ${lastError}
           </div>`
-      : nothing
-    }
+          : nothing
+      }
 
       ${renderChannelConfigSection({ channelId: key, props })}
     </div>
@@ -308,14 +311,15 @@ function renderGenericAccount(account: ChannelAccountSnapshot) {
           <span class="label">${t().ui.views.channels.lastInbound}</span>
           <span>${account.lastInboundAt ? formatAgo(account.lastInboundAt) : t().ui.views.channels.na}</span>
         </div>
-        ${account.lastError
-      ? html`
+        ${
+          account.lastError
+            ? html`
               <div class="account-card-error">
                 ${account.lastError}
               </div>
             `
-      : nothing
-    }
+            : nothing
+        }
       </div>
     </div>
   `;

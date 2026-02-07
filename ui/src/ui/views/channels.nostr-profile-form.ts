@@ -6,7 +6,7 @@
 
 import { html, nothing, type TemplateResult } from "lit";
 import type { NostrProfile as NostrProfileType } from "../types.ts";
-import { t } from "../i18n"; (feat(i18n): localize Telegram, Nostr channels, skills groups and update translations)
+import { t } from "../i18n";
 
 // ============================================================================
 // Types

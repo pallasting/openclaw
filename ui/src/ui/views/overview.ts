@@ -1,9 +1,9 @@
 import { html } from "lit";
 import type { GatewayHelloOk } from "../gateway.ts";
 import type { UiSettings } from "../storage.ts";
-import { formatRelativeTimestamp, formatDurationHuman } from "../format.ts";
+import { formatAgo, formatDurationMs } from "../format.ts";
+import { t } from "../i18n";
 import { formatNextRun } from "../presenter.ts";
-import { t } from "../i18n"; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
 
 export type OverviewProps = {
   connected: boolean;
@@ -27,7 +27,7 @@ export function renderOverview(props: OverviewProps) {
   const snapshot = props.hello?.snapshot as
     | { uptimeMs?: number; policy?: { tickIntervalMs?: number } }
     | undefined;
-  const uptime = snapshot?.uptimeMs ? formatDurationHuman(snapshot.uptimeMs) : "n/a";
+  const uptime = snapshot?.uptimeMs ? formatDurationMs(snapshot.uptimeMs) : "n/a";
   const tick = snapshot?.policy?.tickIntervalMs ? `${snapshot.policy.tickIntervalMs}ms` : "n/a";
   const authHint = (() => {
     if (props.connected || !props.lastError) {
@@ -48,7 +48,7 @@ export function renderOverview(props: OverviewProps) {
 <span class="mono">openclaw dashboard --no-open</span> → open the Control UI<br />
             <span class="mono">openclaw doctor --generate-gateway-token</span> → set token
 <span class="mono">${t().ui.views.overview.authHint.cmdToken}</span> → tokenized URL<br />
-            <span class="mono">${t().ui.views.overview.authHint.cmdGenerate}</span> → ${t().ui.views.overview.authHint.generateToken} (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+            <span class="mono">${t().ui.views.overview.authHint.cmdGenerate}</span> → ${t().ui.views.overview.authHint.generateToken}
           </div>
           <div style="margin-top: 6px">
             <a
@@ -67,7 +67,7 @@ export function renderOverview(props: OverviewProps) {
       <div class="muted" style="margin-top: 8px">
 Auth failed. Update the token or password in Control UI settings, then click Connect.
 ${t().ui.views.overview.authHint.authFailed}
-        <span class="mono">${t().ui.views.overview.authHint.cmdToken}</span>, ${t().ui.views.overview.authHint.updateToken} (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+        <span class="mono">${t().ui.views.overview.authHint.cmdToken}</span>, ${t().ui.views.overview.authHint.updateToken}
         <div style="margin-top: 6px">
           <a
             class="session-link"
@@ -135,9 +135,9 @@ ${t().ui.views.overview.authHint.authFailed}
             <input
               .value=${props.settings.gatewayUrl}
               @input=${(e: Event) => {
-      const v = (e.target as HTMLInputElement).value;
-      props.onSettingsChange({ ...props.settings, gatewayUrl: v });
-    }}
+                const v = (e.target as HTMLInputElement).value;
+                props.onSettingsChange({ ...props.settings, gatewayUrl: v });
+              }}
               placeholder="ws://100.x.y.z:18789"
             />
           </label>
@@ -146,9 +146,9 @@ ${t().ui.views.overview.authHint.authFailed}
             <input
               .value=${props.settings.token}
               @input=${(e: Event) => {
-      const v = (e.target as HTMLInputElement).value;
-      props.onSettingsChange({ ...props.settings, token: v });
-    }}
+                const v = (e.target as HTMLInputElement).value;
+                props.onSettingsChange({ ...props.settings, token: v });
+              }}
               placeholder="OPENCLAW_GATEWAY_TOKEN"
             />
           </label>
@@ -158,9 +158,9 @@ ${t().ui.views.overview.authHint.authFailed}
               type="password"
               .value=${props.password}
               @input=${(e: Event) => {
-      const v = (e.target as HTMLInputElement).value;
-      props.onPasswordChange(v);
-    }}
+                const v = (e.target as HTMLInputElement).value;
+                props.onPasswordChange(v);
+              }}
               placeholder="system or shared password"
             />
           </label>
@@ -169,9 +169,9 @@ ${t().ui.views.overview.authHint.authFailed}
             <input
               .value=${props.settings.sessionKey}
               @input=${(e: Event) => {
-      const v = (e.target as HTMLInputElement).value;
-      props.onSessionKeyChange(v);
-    }}
+                const v = (e.target as HTMLInputElement).value;
+                props.onSessionKeyChange(v);
+              }}
             />
           </label>
         </div>
@@ -203,22 +203,23 @@ ${t().ui.views.overview.authHint.authFailed}
           <div class="stat">
             <div class="stat-label">${t().ui.views.overview.lastChannelsRefresh}</div>
             <div class="stat-value">
-              ${props.lastChannelsRefresh ? formatRelativeTimestamp(props.lastChannelsRefresh) : "n/a"}
+              ${props.lastChannelsRefresh ? formatAgo(props.lastChannelsRefresh) : "n/a"}
             </div>
           </div>
         </div>
-        ${props.lastError
-      ? html`<div class="callout danger" style="margin-top: 14px;">
+        ${
+          props.lastError
+            ? html`<div class="callout danger" style="margin-top: 14px;">
               <div>${props.lastError}</div>
               ${authHint ?? ""}
               ${insecureContextHint ?? ""}
             </div>`
-      : html`
+            : html`
                 <div class="callout" style="margin-top: 14px">
                   ${t().ui.views.overview.useChannelsHint}
                 </div>
               `
-    }
+        }
       </div>
     </section>
 

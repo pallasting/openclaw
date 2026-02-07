@@ -167,10 +167,10 @@ export function titleForTab(tab: Tab) {
     case "instances":
       return t().ui.tabs.instances;
     case "sessions":
-return "Sessions";
+      return "Sessions";
     case "usage":
       return "Usage";
-return t().ui.tabs.sessions; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+      return t().ui.tabs.sessions;
     case "cron":
       return t().ui.tabs.cron;
     case "skills":
@@ -201,10 +201,10 @@ export function subtitleForTab(tab: Tab) {
     case "instances":
       return t().ui.subtitles.instances;
     case "sessions":
-return "Inspect active sessions and adjust per-session defaults.";
+      return "Inspect active sessions and adjust per-session defaults.";
     case "usage":
       return "";
-return t().ui.subtitles.sessions; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+      return t().ui.subtitles.sessions;
     case "cron":
       return t().ui.subtitles.cron;
     case "skills":

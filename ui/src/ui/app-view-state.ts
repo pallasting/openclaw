@@ -35,7 +35,7 @@ import type { ChatAttachment, ChatQueueItem, CronFormState } from "./ui-types.ts
 import type { NostrProfileFormState } from "./views/channels.nostr-profile-form.ts";
 import type { SessionLogEntry } from "./views/usage.ts";
 ConfigUiHints,
-import type { CompactionIndicatorStatus } from "./views/chat"; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+import type { CompactionIndicatorStatus } from "./views/chat";
 
 export type AppViewState = {
   settings: UiSettings;
@@ -316,5 +316,5 @@ handleChatSend: () => Promise<void>;
   configActiveSection: string | null;
   configActiveSubsection: string | null;
 
-  exportLogs: () => void; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+  exportLogs: () => void;
 };

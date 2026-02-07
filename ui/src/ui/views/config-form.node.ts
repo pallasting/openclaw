@@ -1,5 +1,6 @@
 import { html, nothing, type TemplateResult } from "lit";
 import type { ConfigUiHints } from "../types.ts";
+import { t } from "../i18n";
 import {
   defaultValue,
   hintForPath,
@@ -9,7 +10,6 @@ import {
   schemaType,
   type JsonSchema,
 } from "./config-form.shared.ts";
-import { t } from "../i18n"; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
 
 const META_KEYS = new Set(["title", "description", "default", "nullable"]);
 
@@ -154,23 +154,23 @@ export function renderNode(params: {
           ${help ? html`<div class="cfg-field__help">${help}</div>` : nothing}
           <div class="cfg-segmented">
             ${literals.map(
-        (lit) => html`
+              (lit) => html`
               <button
                 type="button"
                 class="cfg-segmented__btn ${
-          // oxlint-disable typescript/no-base-to-string
-          lit === resolvedValue || String(lit) === String(resolvedValue) ? "active" : ""
-          }"
+                  // oxlint-disable typescript/no-base-to-string
+                  lit === resolvedValue || String(lit) === String(resolvedValue) ? "active" : ""
+                }"
                 ?disabled=${disabled}
                 @click=${() => onPatch(path, lit)}
               >
                 ${
-          // oxlint-disable typescript/no-base-to-string
-          String(lit)
-          }
+                  // oxlint-disable typescript/no-base-to-string
+                  String(lit)
+                }
               </button>
             `,
-      )}
+            )}
           </div>
         </div>
       `;
@@ -219,7 +219,7 @@ export function renderNode(params: {
           ${help ? html`<div class="cfg-field__help">${help}</div>` : nothing}
           <div class="cfg-segmented">
             ${options.map(
-        (opt) => html`
+              (opt) => html`
               <button
                 type="button"
                 class="cfg-segmented__btn ${opt === resolvedValue || String(opt) === String(resolvedValue) ? "active" : ""}"
@@ -229,7 +229,7 @@ export function renderNode(params: {
                 ${String(opt)}
               </button>
             `,
-      )}
+            )}
           </div>
         </div>
       `;
@@ -331,28 +331,29 @@ function renderTextInput(params: {
           .value=${displayValue == null ? "" : String(displayValue)}
           ?disabled=${disabled}
           @input=${(e: Event) => {
-      const raw = (e.target as HTMLInputElement).value;
-      if (inputType === "number") {
-        if (raw.trim() === "") {
-          onPatch(path, undefined);
-          return;
-        }
-        const parsed = Number(raw);
-        onPatch(path, Number.isNaN(parsed) ? raw : parsed);
-        return;
-      }
-      onPatch(path, raw);
-    }}
+            const raw = (e.target as HTMLInputElement).value;
+            if (inputType === "number") {
+              if (raw.trim() === "") {
+                onPatch(path, undefined);
+                return;
+              }
+              const parsed = Number(raw);
+              onPatch(path, Number.isNaN(parsed) ? raw : parsed);
+              return;
+            }
+            onPatch(path, raw);
+          }}
           @change=${(e: Event) => {
-      if (inputType === "number") {
-        return;
-      }
-      const raw = (e.target as HTMLInputElement).value;
-      onPatch(path, raw.trim());
-    }}
+            if (inputType === "number") {
+              return;
+            }
+            const raw = (e.target as HTMLInputElement).value;
+            onPatch(path, raw.trim());
+          }}
         />
-        ${schema.default !== undefined
-      ? html`
+        ${
+          schema.default !== undefined
+            ? html`
           <button
             type="button"
             class="cfg-input__reset"
@@ -361,8 +362,8 @@ function renderTextInput(params: {
             @click=${() => onPatch(path, schema.default)}
           >↺</button>
         `
-      : nothing
-    }
+            : nothing
+        }
       </div>
     </div>
   `;
@@ -402,10 +403,10 @@ function renderNumberInput(params: {
           .value=${displayValue == null ? "" : String(displayValue)}
           ?disabled=${disabled}
           @input=${(e: Event) => {
-      const raw = (e.target as HTMLInputElement).value;
-      const parsed = raw === "" ? undefined : Number(raw);
-      onPatch(path, parsed);
-    }}
+            const raw = (e.target as HTMLInputElement).value;
+            const parsed = raw === "" ? undefined : Number(raw);
+            onPatch(path, parsed);
+          }}
         />
         <button
           type="button"
@@ -448,16 +449,16 @@ function renderSelect(params: {
         ?disabled=${disabled}
         .value=${currentIndex >= 0 ? String(currentIndex) : unset}
         @change=${(e: Event) => {
-      const val = (e.target as HTMLSelectElement).value;
-      onPatch(path, val === unset ? undefined : options[Number(val)]);
-    }}
+          const val = (e.target as HTMLSelectElement).value;
+          onPatch(path, val === unset ? undefined : options[Number(val)]);
+        }}
       >
         <option value=${unset}>${t().ui.views.config.form.select}</option>
         ${options.map(
-      (opt, idx) => html`
+          (opt, idx) => html`
           <option value=${String(idx)}>${String(opt)}</option>
         `,
-    )}
+        )}
       </select>
     </div>
   `;
@@ -505,29 +506,30 @@ function renderObject(params: {
     return html`
       <div class="cfg-fields">
         ${sorted.map(([propKey, node]) =>
-      renderNode({
-        schema: node,
-        value: obj[propKey],
-        path: [...path, propKey],
-        hints,
-        unsupported,
-        disabled,
-        onPatch,
-      }),
-    )}
-        ${allowExtra
-        ? renderMapField({
-          schema: additional,
-          value: obj,
-          path,
-          hints,
-          unsupported,
-          disabled,
-          reservedKeys: reserved,
-          onPatch,
-        })
-        : nothing
-      }
+          renderNode({
+            schema: node,
+            value: obj[propKey],
+            path: [...path, propKey],
+            hints,
+            unsupported,
+            disabled,
+            onPatch,
+          }),
+        )}
+        ${
+          allowExtra
+            ? renderMapField({
+                schema: additional,
+                value: obj,
+                path,
+                hints,
+                unsupported,
+                disabled,
+                reservedKeys: reserved,
+                onPatch,
+              })
+            : nothing
+        }
       </div>
     `;
   }
@@ -542,29 +544,30 @@ function renderObject(params: {
       ${help ? html`<div class="cfg-object__help">${help}</div>` : nothing}
       <div class="cfg-object__content">
         ${sorted.map(([propKey, node]) =>
-    renderNode({
-      schema: node,
-      value: obj[propKey],
-      path: [...path, propKey],
-      hints,
-      unsupported,
-      disabled,
-      onPatch,
-    }),
-  )}
-        ${allowExtra
-      ? renderMapField({
-        schema: additional,
-        value: obj,
-        path,
-        hints,
-        unsupported,
-        disabled,
-        reservedKeys: reserved,
-        onPatch,
-      })
-      : nothing
-    }
+          renderNode({
+            schema: node,
+            value: obj[propKey],
+            path: [...path, propKey],
+            hints,
+            unsupported,
+            disabled,
+            onPatch,
+          }),
+        )}
+        ${
+          allowExtra
+            ? renderMapField({
+                schema: additional,
+                value: obj,
+                path,
+                hints,
+                unsupported,
+                disabled,
+                reservedKeys: reserved,
+                onPatch,
+              })
+            : nothing
+        }
       </div>
     </details>
   `;
@@ -608,9 +611,9 @@ function renderArray(params: {
           class="cfg-array__add"
           ?disabled=${disabled}
           @click=${() => {
-      const next = [...arr, defaultValue(itemsSchema)];
-      onPatch(path, next);
-    }}
+            const next = [...arr, defaultValue(itemsSchema)];
+            onPatch(path, next);
+          }}
         >
           <span class="cfg-array__add-icon">${icons.plus}</span>
           ${t().ui.views.config.form.add}
@@ -618,14 +621,15 @@ function renderArray(params: {
       </div>
       ${help ? html`<div class="cfg-array__help">${help}</div>` : nothing}
 
-      ${arr.length === 0
-      ? html`
+      ${
+        arr.length === 0
+          ? html`
               <div class="cfg-array__empty">${t().ui.views.config.form.emptyArray}</div>
             `
-      : html`
+          : html`
         <div class="cfg-array__items">
           ${arr.map(
-        (item, idx) => html`
+            (item, idx) => html`
             <div class="cfg-array__item">
               <div class="cfg-array__item-header">
                 <span class="cfg-array__item-index">#${idx + 1}</span>
@@ -635,32 +639,32 @@ function renderArray(params: {
                   title="${t().ui.views.config.form.remove}"
                   ?disabled=${disabled}
                   @click=${() => {
-            const next = [...arr];
-            next.splice(idx, 1);
-            onPatch(path, next);
-          }}
+                    const next = [...arr];
+                    next.splice(idx, 1);
+                    onPatch(path, next);
+                  }}
                 >
                   ${icons.trash}
                 </button>
               </div>
               <div class="cfg-array__item-content">
                 ${renderNode({
-            schema: itemsSchema,
-            value: item,
-            path: [...path, idx],
-            hints,
-            unsupported,
-            disabled,
-            showLabel: false,
-            onPatch,
-          })}
+                  schema: itemsSchema,
+                  value: item,
+                  path: [...path, idx],
+                  hints,
+                  unsupported,
+                  disabled,
+                  showLabel: false,
+                  onPatch,
+                })}
               </div>
             </div>
           `,
-      )}
+          )}
         </div>
       `
-    }
+      }
     </div>
   `;
 }
@@ -688,32 +692,33 @@ function renderMapField(params: {
           class="cfg-map__add"
           ?disabled=${disabled}
           @click=${() => {
-      const next = { ...value };
-      let index = 1;
-      let key = `custom-${index}`;
-      while (key in next) {
-        index += 1;
-        key = `custom-${index}`;
-      }
-      next[key] = anySchema ? {} : defaultValue(schema);
-      onPatch(path, next);
-    }}
+            const next = { ...value };
+            let index = 1;
+            let key = `custom-${index}`;
+            while (key in next) {
+              index += 1;
+              key = `custom-${index}`;
+            }
+            next[key] = anySchema ? {} : defaultValue(schema);
+            onPatch(path, next);
+          }}
         >
           <span class="cfg-map__add-icon">${icons.plus}</span>
           ${t().ui.views.config.form.addEntry}
         </button>
       </div>
 
-      ${entries.length === 0
-      ? html`
+      ${
+        entries.length === 0
+          ? html`
               <div class="cfg-map__empty">${t().ui.views.config.form.emptyMap}</div>
             `
-      : html`
+          : html`
         <div class="cfg-map__items">
           ${entries.map(([key, entryValue]) => {
-        const valuePath = [...path, key];
-        const fallback = jsonValue(entryValue);
-        return html`
+            const valuePath = [...path, key];
+            const fallback = jsonValue(entryValue);
+            return html`
               <div class="cfg-map__item">
                 <div class="cfg-map__item-key">
                   <input
@@ -723,23 +728,24 @@ function renderMapField(params: {
                     .value=${key}
                     ?disabled=${disabled}
                     @change=${(e: Event) => {
-            const nextKey = (e.target as HTMLInputElement).value.trim();
-            if (!nextKey || nextKey === key) {
-              return;
-            }
-            const next = { ...value };
-            if (nextKey in next) {
-              return;
-            }
-            next[nextKey] = next[key];
-            delete next[key];
-            onPatch(path, next);
-          }}
+                      const nextKey = (e.target as HTMLInputElement).value.trim();
+                      if (!nextKey || nextKey === key) {
+                        return;
+                      }
+                      const next = { ...value };
+                      if (nextKey in next) {
+                        return;
+                      }
+                      next[nextKey] = next[key];
+                      delete next[key];
+                      onPatch(path, next);
+                    }}
                   />
                 </div>
                 <div class="cfg-map__item-value">
-                  ${anySchema
-            ? html`
+                  ${
+                    anySchema
+                      ? html`
                         <textarea
                           class="cfg-textarea cfg-textarea--sm"
                           placeholder="JSON value"
@@ -747,31 +753,31 @@ function renderMapField(params: {
                           .value=${fallback}
                           ?disabled=${disabled}
                           @change=${(e: Event) => {
-                const target = e.target as HTMLTextAreaElement;
-                const raw = target.value.trim();
-                if (!raw) {
-                  onPatch(valuePath, undefined);
-                  return;
-                }
-                try {
-                  onPatch(valuePath, JSON.parse(raw));
-                } catch {
-                  target.value = fallback;
-                }
-              }}
+                            const target = e.target as HTMLTextAreaElement;
+                            const raw = target.value.trim();
+                            if (!raw) {
+                              onPatch(valuePath, undefined);
+                              return;
+                            }
+                            try {
+                              onPatch(valuePath, JSON.parse(raw));
+                            } catch {
+                              target.value = fallback;
+                            }
+                          }}
                         ></textarea>
                       `
-            : renderNode({
-              schema,
-              value: entryValue,
-              path: valuePath,
-              hints,
-              unsupported,
-              disabled,
-              showLabel: false,
-              onPatch,
-            })
-          }
+                      : renderNode({
+                          schema,
+                          value: entryValue,
+                          path: valuePath,
+                          hints,
+                          unsupported,
+                          disabled,
+                          showLabel: false,
+                          onPatch,
+                        })
+                  }
                 </div>
                 <button
                   type="button"
@@ -779,19 +785,19 @@ function renderMapField(params: {
                   title="${t().ui.views.config.form.remove}"
                   ?disabled=${disabled}
                   @click=${() => {
-            const next = { ...value };
-            delete next[key];
-            onPatch(path, next);
-          }}
+                    const next = { ...value };
+                    delete next[key];
+                    onPatch(path, next);
+                  }}
                 >
                   ${icons.trash}
                 </button>
               </div>
             `;
-      })}
+          })}
         </div>
       `
-    }
+      }
     </div>
   `;
 }

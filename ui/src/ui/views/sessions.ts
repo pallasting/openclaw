@@ -1,9 +1,9 @@
 import { html, nothing } from "lit";
 import type { GatewaySessionRow, SessionsListResult } from "../types.ts";
 import { formatAgo } from "../format.ts";
+import { t } from "../i18n";
 import { pathForTab } from "../navigation.ts";
 import { formatSessionTokens } from "../presenter.ts";
-import { t } from "../i18n"; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
 
 export type SessionsProps = {
   loading: boolean;
@@ -36,13 +36,13 @@ export type SessionsProps = {
 const THINK_LEVELS = ["", "off", "minimal", "low", "medium", "high", "xhigh"] as const;
 const BINARY_THINK_LEVELS = ["", "off", "on"] as const;
 const VERBOSE_LEVELS = [
-{ value: "", label: "inherit" },
+  { value: "", label: "inherit" },
   { value: "off", label: "off (explicit)" },
   { value: "on", label: "on" },
   { value: "full", label: "full" },
-{ value: "", label: t().ui.views.sessions.inherit },
+  { value: "", label: t().ui.views.sessions.inherit },
   { value: "off", label: t().ui.views.sessions.offExplicit },
-  { value: "on", label: t().ui.views.sessions.on }, (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+  { value: "on", label: t().ui.views.sessions.on },
 ] as const;
 const REASONING_LEVELS = ["", "off", "on", "stream"] as const;
 
@@ -131,12 +131,12 @@ export function renderSessions(props: SessionsProps) {
           <input
             .value=${props.activeMinutes}
             @input=${(e: Event) =>
-      props.onFiltersChange({
-        activeMinutes: (e.target as HTMLInputElement).value,
-        limit: props.limit,
-        includeGlobal: props.includeGlobal,
-        includeUnknown: props.includeUnknown,
-      })}
+              props.onFiltersChange({
+                activeMinutes: (e.target as HTMLInputElement).value,
+                limit: props.limit,
+                includeGlobal: props.includeGlobal,
+                includeUnknown: props.includeUnknown,
+              })}
           />
         </label>
         <label class="field">
@@ -144,12 +144,12 @@ export function renderSessions(props: SessionsProps) {
           <input
             .value=${props.limit}
             @input=${(e: Event) =>
-      props.onFiltersChange({
-        activeMinutes: props.activeMinutes,
-        limit: (e.target as HTMLInputElement).value,
-        includeGlobal: props.includeGlobal,
-        includeUnknown: props.includeUnknown,
-      })}
+              props.onFiltersChange({
+                activeMinutes: props.activeMinutes,
+                limit: (e.target as HTMLInputElement).value,
+                includeGlobal: props.includeGlobal,
+                includeUnknown: props.includeUnknown,
+              })}
           />
         </label>
         <label class="field checkbox">
@@ -158,12 +158,12 @@ export function renderSessions(props: SessionsProps) {
             type="checkbox"
             .checked=${props.includeGlobal}
             @change=${(e: Event) =>
-      props.onFiltersChange({
-        activeMinutes: props.activeMinutes,
-        limit: props.limit,
-        includeGlobal: (e.target as HTMLInputElement).checked,
-        includeUnknown: props.includeUnknown,
-      })}
+              props.onFiltersChange({
+                activeMinutes: props.activeMinutes,
+                limit: props.limit,
+                includeGlobal: (e.target as HTMLInputElement).checked,
+                includeUnknown: props.includeUnknown,
+              })}
           />
         </label>
         <label class="field checkbox">
@@ -172,20 +172,21 @@ export function renderSessions(props: SessionsProps) {
             type="checkbox"
             .checked=${props.includeUnknown}
             @change=${(e: Event) =>
-      props.onFiltersChange({
-        activeMinutes: props.activeMinutes,
-        limit: props.limit,
-        includeGlobal: props.includeGlobal,
-        includeUnknown: (e.target as HTMLInputElement).checked,
-      })}
+              props.onFiltersChange({
+                activeMinutes: props.activeMinutes,
+                limit: props.limit,
+                includeGlobal: props.includeGlobal,
+                includeUnknown: (e.target as HTMLInputElement).checked,
+              })}
           />
         </label>
       </div>
 
-      ${props.error
-      ? html`<div class="callout danger" style="margin-top: 12px;">${props.error}</div>`
-      : nothing
-    }
+      ${
+        props.error
+          ? html`<div class="callout danger" style="margin-top: 12px;">${props.error}</div>`
+          : nothing
+      }
 
       <div class="muted" style="margin-top: 12px;">
         ${props.result ? t().ui.views.sessions.storePath(props.result.path) : ""}
@@ -203,14 +204,15 @@ export function renderSessions(props: SessionsProps) {
           <div>${t().ui.views.sessions.table.reasoning}</div>
           <div>${t().ui.views.sessions.table.actions}</div>
         </div>
-        ${rows.length === 0
-      ? html`
+        ${
+          rows.length === 0
+            ? html`
                 <div class="muted">${t().ui.views.sessions.noSessions}</div>
               `
-      : rows.map((row) =>
-        renderRow(row, props.basePath, props.onPatch, props.onDelete, props.loading),
-      )
-    }
+            : rows.map((row) =>
+                renderRow(row, props.basePath, props.onPatch, props.onDelete, props.loading),
+              )
+        }
       </div>
     </section>
   `;
@@ -249,17 +251,18 @@ function renderRow(
         ${canLink ? html`<a href=${chatUrl} class="session-link">${row.key}</a>` : row.key}
         ${showDisplayName ? html`<span class="muted session-key-display-name">${displayName}</span>` : nothing}
       </div>
-<div class="mono">${canLink ? html`<a href=${chatUrl} class="session-link">${displayName}</a>` : displayName
-    }</div> (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+<div class="mono">${
+    canLink ? html`<a href=${chatUrl} class="session-link">${displayName}</a>` : displayName
+  }</div>
       <div>
         <input
           .value=${row.label ?? ""}
           ?disabled=${disabled}
           placeholder="${t().ui.views.sessions.optionalPlaceholder}"
           @change=${(e: Event) => {
-      const value = (e.target as HTMLInputElement).value.trim();
-      onPatch(row.key, { label: value || null });
-    }}
+            const value = (e.target as HTMLInputElement).value.trim();
+            onPatch(row.key, { label: value || null });
+          }}
         />
       </div>
       <div>${row.kind}</div>
@@ -269,57 +272,55 @@ function renderRow(
         <select
           ?disabled=${disabled}
           @change=${(e: Event) => {
-      const value = (e.target as HTMLSelectElement).value;
-      onPatch(row.key, {
-        thinkingLevel: resolveThinkLevelPatchValue(value, isBinaryThinking),
-      });
-    }}
+            const value = (e.target as HTMLSelectElement).value;
+            onPatch(row.key, {
+              thinkingLevel: resolveThinkLevelPatchValue(value, isBinaryThinking),
+            });
+          }}
         >
 ${thinkLevels.map(
-            (level) =>
-              html`<option value=${level} ?selected=${thinking === level}>
+  (level) =>
+    html`<option value=${level} ?selected=${thinking === level}>
                 ${level || "inherit"}
               </option>`,
-          )}
-${thinkLevels.map((level) => html`<option value=${level}>${level || t().ui.views.sessions.inherit}</option>`)} (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+)}
+${thinkLevels.map((level) => html`<option value=${level}>${level || t().ui.views.sessions.inherit}</option>`)}
         </select>
       </div>
       <div>
         <select
           ?disabled=${disabled}
           @change=${(e: Event) => {
-      const value = (e.target as HTMLSelectElement).value;
-      onPatch(row.key, { verboseLevel: value || null });
-    }}
+            const value = (e.target as HTMLSelectElement).value;
+            onPatch(row.key, { verboseLevel: value || null });
+          }}
         >
 ${verboseLevels.map(
-            (level) =>
-              html`<option value=${level.value} ?selected=${verbose === level.value}>
+  (level) =>
+    html`<option value=${level.value} ?selected=${verbose === level.value}>
                 ${level.label}
               </option>`,
-          )}
-${VERBOSE_LEVELS.map(
-      (level) => html`<option value=${level.value}>${level.label}</option>`,
-    )} (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+)}
+${VERBOSE_LEVELS.map((level) => html`<option value=${level.value}>${level.label}</option>`)}
         </select>
       </div>
       <div>
         <select
           ?disabled=${disabled}
           @change=${(e: Event) => {
-      const value = (e.target as HTMLSelectElement).value;
-      onPatch(row.key, { reasoningLevel: value || null });
-    }}
+            const value = (e.target as HTMLSelectElement).value;
+            onPatch(row.key, { reasoningLevel: value || null });
+          }}
         >
 ${reasoningLevels.map(
-            (level) =>
-              html`<option value=${level} ?selected=${reasoning === level}>
+  (level) =>
+    html`<option value=${level} ?selected=${reasoning === level}>
                 ${level || "inherit"}
               </option>`,
-          )}
+)}
 ${REASONING_LEVELS.map(
-      (level) => html`<option value=${level}>${level || t().ui.views.sessions.inherit}</option>`,
-    )} (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+  (level) => html`<option value=${level}>${level || t().ui.views.sessions.inherit}</option>`,
+)}
         </select>
       </div>
       <div>

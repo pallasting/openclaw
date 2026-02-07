@@ -17,7 +17,7 @@ import {
   resolveToolProfilePolicy,
 } from "../../../../src/agents/tool-policy.js";
 import { formatAgo } from "../format.ts";
-import { t } from "../i18n"; (feat(i18n): localize Agents view)
+import { t } from "../i18n";
 import {
   formatCronPayload,
   formatCronSchedule,

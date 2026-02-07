@@ -16,10 +16,10 @@ import {
   inferBasePath,
   syncTabWithLocation,
   syncThemeWithSettings,
-} from "./app-settings.ts";
-refreshActiveTab,
+  refreshActiveTab,
   type SettingsHost,
-import { initI18n, setLocale } from "./i18n"; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+} from "./app-settings.ts";
+import { initI18n, setLocale } from "./i18n.ts";
 
 type LifecycleHost = {
   basePath: string;

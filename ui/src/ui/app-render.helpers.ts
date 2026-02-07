@@ -7,11 +7,11 @@ import type { SessionsListResult } from "./types.ts";
 import { refreshChat } from "./app-chat.ts";
 import { syncUrlWithSessionKey } from "./app-settings.ts";
 import { OpenClawApp } from "./app.ts";
+import { loadChatHistory } from "./controllers/chat";
 import { ChatState, loadChatHistory } from "./controllers/chat.ts";
+import { t } from "./i18n";
 import { icons } from "./icons.ts";
 import { iconForTab, pathForTab, titleForTab, type Tab } from "./navigation.ts";
-import { loadChatHistory } from "./controllers/chat";
-import { t } from "./i18n"; (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
 
 export function renderTab(state: AppViewState, tab: Tab) {
   const href = pathForTab(tab, state.basePath);
@@ -20,19 +20,19 @@ export function renderTab(state: AppViewState, tab: Tab) {
       href=${href}
       class="nav-item ${state.tab === tab ? "active" : ""}"
       @click=${(event: MouseEvent) => {
-      if (
-        event.defaultPrevented ||
-        event.button !== 0 ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey
-      ) {
-        return;
-      }
-      event.preventDefault();
-      state.setTab(tab);
-    }}
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
+        ) {
+          return;
+        }
+        event.preventDefault();
+        state.setTab(tab);
+      }}
       title=${titleForTab(tab)}
     >
       <span class="nav-item__icon" aria-hidden="true">${icons[iconForTab(tab)]}</span>
@@ -93,7 +93,7 @@ export function renderChatControls(state: AppViewState) {
           .value=${state.sessionKey}
           ?disabled=${!state.connected}
           @change=${(e: Event) => {
-const next = (e.target as HTMLSelectElement).value;
+            const next = (e.target as HTMLSelectElement).value;
             state.sessionKey = next;
             state.chatMessage = "";
             state.chatStream = null;
@@ -129,30 +129,30 @@ const next = (e.target as HTMLSelectElement).value;
       void state.loadAssistantIdentity();
       syncUrlWithSessionKey(state, next, true);
       void loadChatHistory(state);
-    }} (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+    }}
         >
           ${repeat(
-      sessionOptions,
-      (entry) => entry.key,
-      (entry) =>
-        html`<option value=${entry.key}>
+            sessionOptions,
+            (entry) => entry.key,
+            (entry) =>
+              html`<option value=${entry.key}>
                 ${entry.displayName ?? entry.key}
               </option>`,
-    )}
+          )}
         </select>
       </label>
       <button
         class="btn btn--sm btn--icon"
         ?disabled=${state.chatLoading || !state.connected}
         @click=${() => {
-(state as unknown as OpenClawApp).resetToolStream();
+          (state as unknown as OpenClawApp).resetToolStream();
           void refreshChat(state as unknown as Parameters<typeof refreshChat>[0]);
         }}
         title="Refresh chat data"
 state.resetToolStream();
       void refreshChat(state as unknown as Parameters<typeof refreshChat>[0]);
     }}
-        title="${t().ui.views.chat.refreshData}" (feat(i18n): localize Control UI to Simplified Chinese (zh-CN))
+        title="${t().ui.views.chat.refreshData}"
       >
         ${refreshIcon}
       </button>
@@ -161,19 +161,20 @@ state.resetToolStream();
         class="btn btn--sm btn--icon ${showThinking ? "active" : ""}"
         ?disabled=${disableThinkingToggle}
         @click=${() => {
-      if (disableThinkingToggle) {
-        return;
-      }
-      state.applySettings({
-        ...state.settings,
-        chatShowThinking: !state.settings.chatShowThinking,
-      });
-    }}
+          if (disableThinkingToggle) {
+            return;
+          }
+          state.applySettings({
+            ...state.settings,
+            chatShowThinking: !state.settings.chatShowThinking,
+          });
+        }}
         aria-pressed=${showThinking}
-        title=${disableThinkingToggle
-      ? t().ui.views.chat.thinkingDisabled
-      : t().ui.views.chat.toggleThinking
-    }
+        title=${
+          disableThinkingToggle
+            ? t().ui.views.chat.thinkingDisabled
+            : t().ui.views.chat.toggleThinking
+        }
       >
         ${icons.brain}
       </button>
@@ -181,19 +182,18 @@ state.resetToolStream();
         class="btn btn--sm btn--icon ${focusActive ? "active" : ""}"
         ?disabled=${disableFocusToggle}
         @click=${() => {
-      if (disableFocusToggle) {
-        return;
-      }
-      state.applySettings({
-        ...state.settings,
-        chatFocusMode: !state.settings.chatFocusMode,
-      });
-    }}
+          if (disableFocusToggle) {
+            return;
+          }
+          state.applySettings({
+            ...state.settings,
+            chatFocusMode: !state.settings.chatFocusMode,
+          });
+        }}
         aria-pressed=${focusActive}
-        title=${disableFocusToggle
-      ? t().ui.views.chat.focusDisabled
-      : t().ui.views.chat.toggleFocus
-    }
+        title=${
+          disableFocusToggle ? t().ui.views.chat.focusDisabled : t().ui.views.chat.toggleFocus
+        }
       >
         ${focusIcon}
       </button>

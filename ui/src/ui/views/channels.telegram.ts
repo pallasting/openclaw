@@ -2,8 +2,8 @@ import { html, nothing } from "lit";
 import type { ChannelAccountSnapshot, TelegramStatus } from "../types.ts";
 import type { ChannelsProps } from "./channels.types.ts";
 import { formatAgo } from "../format.ts";
+import { t } from "../i18n";
 import { renderChannelConfigSection } from "./channels.config.ts";
-import { t } from "../i18n"; (feat(i18n): localize Telegram, Nostr channels, skills groups and update translations)
 
 export function renderTelegramCard(params: {
   props: ChannelsProps;
