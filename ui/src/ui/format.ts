@@ -4,6 +4,11 @@ import { stripReasoningTagsFromText } from "../../../src/shared/text/reasoning-t
 
 export { formatRelativeTimestamp, formatDurationHuman };
 
+// Aliases for backward compatibility
+export { formatRelativeTimestamp as formatAgo };
+export { formatDurationHuman as formatDuration };
+export { formatDurationHuman as formatDurationMs };
+
 export function formatMs(ms?: number | null): string {
   if (!ms && ms !== 0) {
     return "n/a";
