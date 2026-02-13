@@ -75,7 +75,7 @@ export async function runOnboardingWizard(
 
   // Language selection
   let selectedLocale: Locale = initialConfig.language ?? getLocale();
-  if (!opts.nonInteractive && !(opts as any).yes) {
+  if (!opts.nonInteractive && !opts.yes) {
     selectedLocale = await prompter.select<Locale>({
       message: "Select Language / 选择语言",
       options: [
@@ -112,8 +112,6 @@ export async function runOnboardingWizard(
     return;
   }
 
-  const quickstartHint = `Configure details later via ${formatCliCommand("openclaw configure")}.`;
-  const manualHint = "Configure port, network, Tailscale, and auth options.";
   const explicitFlowRaw = opts.flow?.trim();
   const normalizedExplicitFlow = explicitFlowRaw === "manual" ? "advanced" : explicitFlowRaw;
   if (

@@ -135,4 +135,6 @@ export type OnboardOptions = {
   remoteUrl?: string;
   remoteToken?: string;
   json?: boolean;
+  /** Non-interactive mode; assumes yes for all prompts. */
+  yes?: boolean;
 };

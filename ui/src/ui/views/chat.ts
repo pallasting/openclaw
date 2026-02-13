@@ -13,7 +13,6 @@ import {
 import { normalizeMessage, normalizeRoleForGrouping } from "../chat/message-normalizer.ts";
 import { t } from "../i18n";
 import "../components/resizable-divider.ts";
-import { t } from "../i18n";
 import { icons } from "../icons.ts";
 import { detectTextDirection } from "../text-direction.ts";
 import { renderMarkdownSidebar } from "./markdown-sidebar.ts";
