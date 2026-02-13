@@ -18,6 +18,7 @@ import {
 } from "../commands/auth-choice.js";
 import { applyPrimaryModel, promptDefaultModel } from "../commands/model-picker.js";
 import { setupChannels } from "../commands/onboard-channels.js";
+import { promptCustomApiConfig } from "../commands/onboard-custom.js";
 import {
   applyWizardMetadata,
   DEFAULT_WORKSPACE,
@@ -37,12 +38,12 @@ import {
   writeConfigFile,
 } from "../config/config.js";
 import { logConfigUpdated } from "../config/logging.js";
+import { getLocale, type Locale, setLocale, t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { resolveUserPath } from "../utils.js";
 import { finalizeOnboardingWizard } from "./onboarding.finalize.js";
 import { configureGatewayForOnboarding } from "./onboarding.gateway-config.js";
 import { WizardCancelledError, type WizardPrompter } from "./prompts.js";
-import { getLocale, type Locale, setLocale, t } from "../i18n/index.js";
 
 async function requireRiskAcknowledgement(params: {
   opts: OnboardOptions;
@@ -194,10 +195,10 @@ export async function runOnboardingWizard(
     const bindRaw = baseConfig.gateway?.bind;
     const bind =
       bindRaw === "loopback" ||
-        bindRaw === "lan" ||
-        bindRaw === "auto" ||
-        bindRaw === "custom" ||
-        bindRaw === "tailnet"
+      bindRaw === "lan" ||
+      bindRaw === "auto" ||
+      bindRaw === "custom" ||
+      bindRaw === "tailnet"
         ? bindRaw
         : "loopback";
 
@@ -265,23 +266,23 @@ export async function runOnboardingWizard(
     };
     const quickstartLines = quickstartGateway.hasExisting
       ? [
-        t().wizard.keepExistingSettings,
-        `${t().wizard.gatewayPort}: ${quickstartGateway.port}`,
-        `${t().wizard.gatewayBind}: ${formatBind(quickstartGateway.bind)}`,
-        ...(quickstartGateway.bind === "custom" && quickstartGateway.customBindHost
-          ? [`${t().wizard.gatewayCustomIp}: ${quickstartGateway.customBindHost}`]
-          : []),
-        `${t().wizard.gatewayAuth}: ${formatAuth(quickstartGateway.authMode)}`,
-        `${t().wizard.tailscaleExposure}: ${formatTailscale(quickstartGateway.tailscaleMode)}`,
-        t().wizard.directToChannels,
-      ]
+          t().wizard.keepExistingSettings,
+          `${t().wizard.gatewayPort}: ${quickstartGateway.port}`,
+          `${t().wizard.gatewayBind}: ${formatBind(quickstartGateway.bind)}`,
+          ...(quickstartGateway.bind === "custom" && quickstartGateway.customBindHost
+            ? [`${t().wizard.gatewayCustomIp}: ${quickstartGateway.customBindHost}`]
+            : []),
+          `${t().wizard.gatewayAuth}: ${formatAuth(quickstartGateway.authMode)}`,
+          `${t().wizard.tailscaleExposure}: ${formatTailscale(quickstartGateway.tailscaleMode)}`,
+          t().wizard.directToChannels,
+        ]
       : [
-        `${t().wizard.gatewayPort}: ${DEFAULT_GATEWAY_PORT}`,
-        `${t().wizard.gatewayBind}: ${t().wizard.bindLoopback}`,
-        `${t().wizard.gatewayAuth}: ${t().wizard.authTokenDefault}`,
-        `${t().wizard.tailscaleExposure}: ${t().wizard.tailscaleOff}`,
-        t().wizard.directToChannels,
-      ];
+          `${t().wizard.gatewayPort}: ${DEFAULT_GATEWAY_PORT}`,
+          `${t().wizard.gatewayBind}: ${t().wizard.bindLoopback}`,
+          `${t().wizard.gatewayAuth}: ${t().wizard.authTokenDefault}`,
+          `${t().wizard.tailscaleExposure}: ${t().wizard.tailscaleOff}`,
+          t().wizard.directToChannels,
+        ];
     await prompter.note(quickstartLines.join("\n"), t().wizard.quickstartNote);
   }
 
@@ -295,9 +296,9 @@ export async function runOnboardingWizard(
   const remoteUrl = baseConfig.gateway?.remote?.url?.trim() ?? "";
   const remoteProbe = remoteUrl
     ? await probeGatewayReachable({
-      url: remoteUrl,
-      token: baseConfig.gateway?.remote?.token,
-    })
+        url: remoteUrl,
+        token: baseConfig.gateway?.remote?.token,
+      })
     : null;
 
   const mode =
@@ -305,26 +306,26 @@ export async function runOnboardingWizard(
     (flow === "quickstart"
       ? "local"
       : ((await prompter.select({
-        message: t().wizard.setupChoiceTitle,
-        options: [
-          {
-            value: "local",
-            label: t().wizard.localGatewayLabel,
-            hint: localProbe.ok
-              ? t().wizard.gatewayReachable(localUrl)
-              : t().wizard.noGatewayDetected(localUrl),
-          },
-          {
-            value: "remote",
-            label: t().wizard.remoteGatewayLabel,
-            hint: !remoteUrl
-              ? t().wizard.noRemoteUrl
-              : remoteProbe?.ok
-                ? t().wizard.gatewayReachable(remoteUrl)
-                : t().wizard.remoteGatewayUnreachable(remoteUrl),
-          },
-        ],
-      })) as OnboardMode));
+          message: t().wizard.setupChoiceTitle,
+          options: [
+            {
+              value: "local",
+              label: t().wizard.localGatewayLabel,
+              hint: localProbe.ok
+                ? t().wizard.gatewayReachable(localUrl)
+                : t().wizard.noGatewayDetected(localUrl),
+            },
+            {
+              value: "remote",
+              label: t().wizard.remoteGatewayLabel,
+              hint: !remoteUrl
+                ? t().wizard.noRemoteUrl
+                : remoteProbe?.ok
+                  ? t().wizard.gatewayReachable(remoteUrl)
+                  : t().wizard.remoteGatewayUnreachable(remoteUrl),
+            },
+          ],
+        })) as OnboardMode));
 
   if (mode === "remote") {
     let nextConfig = await promptRemoteGatewayConfig(baseConfig, prompter);
@@ -340,9 +341,9 @@ export async function runOnboardingWizard(
     (flow === "quickstart"
       ? (baseConfig.agents?.defaults?.workspace ?? DEFAULT_WORKSPACE)
       : await prompter.text({
-        message: t().wizard.workspaceDirLabel,
-        initialValue: baseConfig.agents?.defaults?.workspace ?? DEFAULT_WORKSPACE,
-      }));
+          message: t().wizard.workspaceDirLabel,
+          initialValue: baseConfig.agents?.defaults?.workspace ?? DEFAULT_WORKSPACE,
+        }));
 
   const workspaceDir = resolveUserPath(workspaceInput.trim() || DEFAULT_WORKSPACE);
 
@@ -373,26 +374,38 @@ export async function runOnboardingWizard(
       includeSkip: true,
     }));
 
-  const authResult = await applyAuthChoice({
-    authChoice,
-    config: nextConfig,
-    prompter,
-    runtime,
-    setDefaultModel: true,
-    opts: {
-      tokenProvider: opts.tokenProvider,
-      token: opts.authChoice === "apiKey" && opts.token ? opts.token : undefined,
-    },
-  });
-  nextConfig = authResult.config;
+  let customPreferredProvider: string | undefined;
+  if (authChoice === "custom-api-key") {
+    const customResult = await promptCustomApiConfig({
+      prompter,
+      runtime,
+      config: nextConfig,
+    });
+    nextConfig = customResult.config;
+    customPreferredProvider = customResult.providerId;
+  } else {
+    const authResult = await applyAuthChoice({
+      authChoice,
+      config: nextConfig,
+      prompter,
+      runtime,
+      setDefaultModel: true,
+      opts: {
+        tokenProvider: opts.tokenProvider,
+        token: opts.authChoice === "apiKey" && opts.token ? opts.token : undefined,
+      },
+    });
+    nextConfig = authResult.config;
+  }
 
-  if (authChoiceFromPrompt) {
+  if (authChoiceFromPrompt && authChoice !== "custom-api-key") {
     const modelSelection = await promptDefaultModel({
       config: nextConfig,
       prompter,
       allowKeep: true,
       ignoreAllowlist: true,
-      preferredProvider: resolvePreferredProviderForAuthChoice(authChoice),
+      preferredProvider:
+        customPreferredProvider ?? resolvePreferredProviderForAuthChoice(authChoice),
     });
     if (modelSelection.model) {
       nextConfig = applyPrimaryModel(nextConfig, modelSelection.model);
@@ -419,8 +432,8 @@ export async function runOnboardingWizard(
     const quickstartAllowFromChannels =
       flow === "quickstart"
         ? listChannelPlugins()
-          .filter((plugin) => plugin.meta.quickstartAllowFrom)
-          .map((plugin) => plugin.id)
+            .filter((plugin) => plugin.meta.quickstartAllowFrom)
+            .map((plugin) => plugin.id)
         : [];
     nextConfig = await setupChannels(nextConfig, runtime, prompter, {
       allowSignalInstall: true,

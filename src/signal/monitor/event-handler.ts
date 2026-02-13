@@ -47,7 +47,7 @@ import {
   resolveSignalSender,
 } from "../identity.js";
 import { sendMessageSignal, sendReadReceiptSignal, sendTypingSignal } from "../send.js";
-
+import { renderSignalMentions } from "./mentions.js";
 export function createSignalEventHandler(deps: SignalEventHandlerDeps) {
   const inboundDebounceMs = resolveInboundDebounceMs({ cfg: deps.cfg, channel: "signal" });
 
@@ -127,8 +127,18 @@ export function createSignalEventHandler(deps: SignalEventHandlerDeps) {
       });
     }
     const signalTo = entry.isGroup ? `group:${entry.groupId}` : `signal:${entry.senderRecipient}`;
+    const inboundHistory =
+      entry.isGroup && historyKey && deps.historyLimit > 0
+        ? (deps.groupHistories.get(historyKey) ?? []).map((historyEntry) => ({
+            sender: historyEntry.sender,
+            body: historyEntry.body,
+            timestamp: historyEntry.timestamp,
+          }))
+        : undefined;
     const ctxPayload = finalizeInboundContext({
       Body: combinedBody,
+      BodyForAgent: entry.bodyText,
+      InboundHistory: inboundHistory,
       RawBody: entry.bodyText,
       CommandBody: entry.bodyText,
       From: entry.isGroup
@@ -342,7 +352,13 @@ export function createSignalEventHandler(deps: SignalEventHandlerDeps) {
       : deps.isSignalReactionMessage(dataMessage?.reaction)
         ? dataMessage?.reaction
         : null;
-    const messageText = (dataMessage?.message ?? "").trim();
+
+    // Replace ￼ (object replacement character) with @uuid or @phone from mentions
+    // Signal encodes mentions as the object replacement character; hydrate them from metadata first.
+    const rawMessage = dataMessage?.message ?? "";
+    const normalizedMessage = renderSignalMentions(rawMessage, dataMessage?.mentions);
+    const messageText = normalizedMessage.trim();
+
     const quoteText = dataMessage?.quote?.text?.trim() ?? "";
     const hasBodyContent =
       Boolean(messageText || quoteText) || Boolean(!reaction && dataMessage?.attachments?.length);

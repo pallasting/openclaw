@@ -8,8 +8,8 @@ import type {
 } from "./onboarding.types.js";
 import type { WizardPrompter } from "./prompts.js";
 import { normalizeGatewayTokenInput, randomToken } from "../commands/onboard-helpers.js";
-import { findTailscaleBinary } from "../infra/tailscale.js";
 import { t } from "../i18n/index.js";
+import { findTailscaleBinary } from "../infra/tailscale.js";
 
 // These commands are "high risk" (privacy writes/recording) and should be
 // explicitly armed by the user when they want to use them.
@@ -50,29 +50,30 @@ export async function configureGatewayForOnboarding(
     flow === "quickstart"
       ? quickstartGateway.port
       : Number.parseInt(
-        String(
-          await prompter.text({
-            message: t().wizard.gatewayPort,
-            initialValue: String(localPort),
-            validate: (value) => (Number.isFinite(Number(value)) ? undefined : t().wizard.invalidPort),
-          }),
-        ),
-        10,
-      );
+          String(
+            await prompter.text({
+              message: t().wizard.gatewayPort,
+              initialValue: String(localPort),
+              validate: (value) =>
+                Number.isFinite(Number(value)) ? undefined : t().wizard.invalidPort,
+            }),
+          ),
+          10,
+        );
 
   let bind: GatewayWizardSettings["bind"] =
     flow === "quickstart"
       ? quickstartGateway.bind
       : await prompter.select<GatewayWizardSettings["bind"]>({
-        message: t().wizard.gatewayBind,
-        options: [
-          { value: "loopback", label: t().wizard.bindLoopback },
-          { value: "lan", label: t().wizard.bindLan },
-          { value: "tailnet", label: t().wizard.bindTailnet },
-          { value: "auto", label: t().wizard.bindAuto },
-          { value: "custom", label: t().wizard.bindCustom },
-        ],
-      });
+          message: t().wizard.gatewayBind,
+          options: [
+            { value: "loopback", label: t().wizard.bindLoopback },
+            { value: "lan", label: t().wizard.bindLan },
+            { value: "tailnet", label: t().wizard.bindTailnet },
+            { value: "auto", label: t().wizard.bindAuto },
+            { value: "custom", label: t().wizard.bindCustom },
+          ],
+        });
 
   let customBindHost = quickstartGateway.customBindHost;
   if (bind === "custom") {
@@ -110,37 +111,37 @@ export async function configureGatewayForOnboarding(
     flow === "quickstart"
       ? quickstartGateway.authMode
       : ((await prompter.select({
-        message: t().wizard.gatewayAuth,
-        options: [
-          {
-            value: "token",
-            label: "Token",
-            hint: t().wizard.authHintToken,
-          },
-          { value: "password", label: "Password" },
-        ],
-        initialValue: "token",
-      })) as GatewayAuthChoice);
+          message: t().wizard.gatewayAuth,
+          options: [
+            {
+              value: "token",
+              label: "Token",
+              hint: t().wizard.authHintToken,
+            },
+            { value: "password", label: "Password" },
+          ],
+          initialValue: "token",
+        })) as GatewayAuthChoice);
 
   const tailscaleMode: GatewayWizardSettings["tailscaleMode"] =
     flow === "quickstart"
       ? quickstartGateway.tailscaleMode
       : await prompter.select<GatewayWizardSettings["tailscaleMode"]>({
-        message: t().wizard.tailscaleExposure,
-        options: [
-          { value: "off", label: t().wizard.tailscaleOff, hint: t().wizard.tailscaleHintOff },
-          {
-            value: "serve",
-            label: t().wizard.tailscaleServe,
-            hint: t().wizard.tailscaleHintServe,
-          },
-          {
-            value: "funnel",
-            label: t().wizard.tailscaleFunnel,
-            hint: t().wizard.tailscaleHintFunnel,
-          },
-        ],
-      });
+          message: t().wizard.tailscaleExposure,
+          options: [
+            { value: "off", label: t().wizard.tailscaleOff, hint: t().wizard.tailscaleHintOff },
+            {
+              value: "serve",
+              label: t().wizard.tailscaleServe,
+              hint: t().wizard.tailscaleHintServe,
+            },
+            {
+              value: "funnel",
+              label: t().wizard.tailscaleFunnel,
+              hint: t().wizard.tailscaleHintFunnel,
+            },
+          ],
+        });
 
   // Detect Tailscale binary before proceeding with serve/funnel setup.
   if (tailscaleMode !== "off") {
@@ -199,9 +200,9 @@ export async function configureGatewayForOnboarding(
       flow === "quickstart" && quickstartGateway.password
         ? quickstartGateway.password
         : await prompter.text({
-          message: t().wizard.gatewayPasswordLabel,
-          validate: (value) => (value?.trim() ? undefined : t().wizard.passwordRequired),
-        });
+            message: t().wizard.gatewayPasswordLabel,
+            validate: (value) => (value?.trim() ? undefined : t().wizard.passwordRequired),
+          });
     nextConfig = {
       ...nextConfig,
       gateway: {
@@ -209,7 +210,7 @@ export async function configureGatewayForOnboarding(
         auth: {
           ...nextConfig.gateway?.auth,
           mode: "password",
-          password: String(password).trim(),
+          password: String(password ?? "").trim(),
         },
       },
     };

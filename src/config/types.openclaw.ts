@@ -45,10 +45,10 @@ export type OpenClawConfig = {
     vars?: Record<string, string>;
     /** Sugar: allow env vars directly under env (string values only). */
     [key: string]:
-    | string
-    | Record<string, string>
-    | { enabled?: boolean; timeoutMs?: number }
-    | undefined;
+      | string
+      | Record<string, string>
+      | { enabled?: boolean; timeoutMs?: number }
+      | undefined;
   };
   wizard?: {
     lastRunAt?: string;
@@ -115,6 +115,12 @@ export type ConfigFileSnapshot = {
   exists: boolean;
   raw: string | null;
   parsed: unknown;
+  /**
+   * Config after $include resolution and ${ENV} substitution, but BEFORE runtime
+   * defaults are applied. Use this for config set/unset operations to avoid
+   * leaking runtime defaults into the written config file.
+   */
+  resolved: OpenClawConfig;
   valid: boolean;
   config: OpenClawConfig;
   hash?: string;
