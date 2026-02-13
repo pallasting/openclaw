@@ -1,0 +1,51 @@
+{
+  "name": "@openclaw/extension-learning",
+  "version": "0.1.0",
+  "description": "OpenClaw Extension for Agent Learning capabilities powered by Microsoft Agent Lightning.",
+  "type": "module",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "vitest",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
+    "clean": "rm -rf build node_modules"
+  },
+  "keywords": [
+    "openclaw",
+    "extension",
+    "agent",
+    "learning",
+    "agent-lightning"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "dependencies": {
+    "agent-lightning": "^0.1.0"
+  },
+  "devDependencies": {
+    "@openclaw/types": "workspace:*",
+    "@types/node": "^20.11.17",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2"
+  },
+  "openclaw": {
+    "type": "extension",
+    "id": "openclaw-learning",
+    "name": "Agent Learning Extension",
+    "description": "Integrates Agent Learning capabilities into OpenClaw for continuous improvement.",
+    "version": "0.1.0",
+    "configSchema": "./config.schema.json",
+    "provides": [
+      "agent-learning",
+      "prompt-optimization",
+      "reinforcement-learning"
+    ]
+  }
+}

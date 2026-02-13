@@ -1,0 +1,1 @@
+// OpenClaw shared types

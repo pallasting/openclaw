@@ -1,0 +1,11 @@
+{
+  "name": "@openclaw/types",
+  "version": "0.1.0",
+  "description": "OpenClaw shared types",
+  "files": [
+    "*.ts"
+  ],
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts"
+}
